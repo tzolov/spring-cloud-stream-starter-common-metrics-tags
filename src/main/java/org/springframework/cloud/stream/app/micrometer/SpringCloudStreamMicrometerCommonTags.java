@@ -1,8 +1,7 @@
 package org.springframework.cloud.stream.app.micrometer;
 
-import java.util.Map;
-
 import io.micrometer.core.instrument.MeterRegistry;
+import io.micrometer.core.instrument.config.MeterFilter;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
@@ -14,9 +13,6 @@ import org.springframework.context.annotation.Configuration;
  */
 @Configuration
 public class SpringCloudStreamMicrometerCommonTags {
-
-	private Map<String, String> commonTags;
-
 
 	@Value("${spring.cloud.dataflow.cluster:default}")
 	private String clusterId;
@@ -45,5 +41,14 @@ public class SpringCloudStreamMicrometerCommonTags {
 				.commonTags("applicationType", applicationType)
 				.commonTags("instanceIndex", instanceIndex)
 				.commonTags("applicationGuid", applicationGuid);
+	}
+
+	@Bean
+	public MeterRegistryCustomizer<MeterRegistry> renameNameTag() {
+		return registry -> {
+			if (registry.getClass().getCanonicalName().contains("AtlasMeterRegistry")) {
+				registry.config().meterFilter(MeterFilter.renameTag("spring.integration", "name", "aname"));
+			}
+		};
 	}
 }
