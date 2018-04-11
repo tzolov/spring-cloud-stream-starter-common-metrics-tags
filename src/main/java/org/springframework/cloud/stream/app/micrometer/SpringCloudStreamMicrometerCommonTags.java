@@ -26,7 +26,7 @@ public class SpringCloudStreamMicrometerCommonTags {
 	@Value("${instance.index:unknown}")
 	private String instanceIndex;
 
-	@Value("${spring.cloud.application.gui:unknown}")
+	@Value("${spring.cloud.application.guid:unknown}")
 	private String applicationGuid;
 
 	@Value("${spring.cloud.dataflow.stream.app.type:unknown}")
